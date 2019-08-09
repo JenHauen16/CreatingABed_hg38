@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head> 
+   <title>Create BED</title>  
+   <meta charset="utf-8">
+   <link rel="stylesheet" type="text/css" href="css/bed_creation.css"/>
+   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+   <script type="text/javascript" src="js/search.js"></script>
+
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"/>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+</head>
+
+<script>
+  function splitLastLine( val ) {
+      return (val.split( /\n/ ).pop().split( / / ));
+    }
+  function extractAllButLastLine( val ) {
+      var lines = val.split( /\n/ )
+      lines.pop();
+      if(lines.length == 0)  {
+          return "";
+    } 
+      else {
+          return lines.join( "\n" ) + "\n";
+     }
+   }
+
+  function extractLastWord( val ) {
+      return splitLastLine( val ).pop();
+   }
+
+  $(document).ready(function() {
+    $("#gene_search")
+      .on( "keydown", function( event ) {
+        if ( event.keyCode === $.ui.keyCode.TAB &&
+            $( this ).autocomplete( "instance" ).menu.active ) {
+          event.preventDefault();
+        }
+     })
+      .autocomplete({
+        source: function( request, response ) {
+        $.getJSON("autocomplete.cgi", {
+          gene_search: extractLastWord( request.term )
+        }, response );
+      },
+        search: function() {
+          var term = extractLastWord( this.value );
+          if ( term.length < 2 ) {
+            return false;
+          }
+        },
+        focus: function() {
+          return false;
+        },
+       select: function( event, ui ) {
+          var terms = splitLastLine( this.value );
+          terms.pop();
+          terms.push( ui.item.value );
+          this.value = extractAllButLastLine( this.value ) + terms.join( " " );
+          return false;
+        }
+      });
+    });
+
+    $("#gene_search").autocomplete({
+      source: function(request, response) {
+        $.ajax({
+          url: "autocomplete.cgi?gene_search=" + request.term,
+          datatype: "json",
+          data: {
+              term: request.label
+         },
+         success: function(data) {
+           response(data);
+         }
+      });
+      }});
+  
+</script> 
+
+
+<body id="main">
+   <h1>Creating a BED (hg19)</h1>
+   <p>In the following box, type the gene name, a space, and "gain", "loss", "loh", or "mutation".</p>
+   <p>If you are unsure of the gene name, suggestions will be provided.</p>
+   <p>Be sure not to leave spaces after your final entry!</p>
+   <form name= 'genesearch' id='genesearch' action=''> 
+   <textarea  name="gene_search" id="gene_search" cols="20" rows="20" placeholder="ex.MDM2 Gain" autofocus="autofocus"></textarea>
+   <input name="submit" type="submit" id='submit' value="submit">
+   </form>
+   <section id='results'>
+      <p>
+          <span id='match_count'>0</span> match(es) found.
+     </p>
+     <table>
+      <tbody>
+         <!--Js goes here-->
+      </tbody>
+  </section>  
+   
+   <p>
+   <form name='downloadbed' id="downloadbed"> 
+   <button type="button" id="bed_download">Click to download BED with header</button>
+   </form>
+   </p>
+</body>
+</html>
+
