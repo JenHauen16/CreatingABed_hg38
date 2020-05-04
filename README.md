@@ -1,7 +1,7 @@
 # CreateBED_AdvFinalProject
 Creating a BED
 
-This stack is used to create a 12-column BED file used to assist with genomic analysis. Using the search.html file, users will input a gene list, with the common abnormality, into the text area. After hitting the submit button, a SQL query of the UCSC genome browser's hg19 database returns genomic information necessary to create a 12-column bed file. The CGI file contains python programming to obtain exon sizes and exon start locations to create gene structure and add color to the genes based on the given abnormality.
+This stack is used to create a 12-column BED file used to assist with genomic analysis. Using the search.html file, users will input a gene list, with the common abnormality, into the text area. After hitting the submit button, a SQL query of the UCSC genome browser's hg38 database returns genomic information necessary to create a 12-column bed file. The CGI file contains python programming to obtain exon sizes and exon start locations to create gene structure and add color to the genes based on the given abnormality.
 
 1) Install Python 3.6.1
 

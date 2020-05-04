@@ -21,7 +21,7 @@ def main():
             genes.append(m.group(1))
             abn.append(gr)
 
-    conn = mysql.connector.connect(user='genomep', password="password", host="genome-mysql.soe.ucsc.edu", database='hg19')
+    conn = mysql.connector.connect(user='genomep', password="password", host="genome-mysql.soe.ucsc.edu", database='hg38')
     curs = conn.cursor()
     results = { 'match_count': 0, 'matches': list()}
     bed = list() 
