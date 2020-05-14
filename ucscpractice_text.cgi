@@ -22,7 +22,7 @@ def main():
             genes.append(m.group(1))
             abn.append(gr)
 
-    conn = mysql.connector.connect(user='genomep', password="password", host="genome-mysql.soe.ucsc.edu", database='hg19')
+    conn = mysql.connector.connect(user='genomep', password="password", host="genome-mysql.soe.ucsc.edu", database='hg38')
     curs = conn.cursor()
     bed = list() 
     for (gene,rgb) in zip(genes,abn):
@@ -57,7 +57,7 @@ def main():
             txstart4 = str(txstart3).replace(' ', '').replace('[', '').replace(']', '')
             bed.append('{0}\t{1}\t{2}\t{3}\t0\t{4}\t{5}\t{6}\t{7}\t{8}\t{9}\t{10}'.format(str(chrom), str(txStart), str(txEnd), str(geneSymbol), str(strand), str(cdsStart), str(cdsEnd), str(rgb), str(exonCount), str(exsub2), str(txstart4)))
     conn.close()
-    print("track name=user_defined description=user_defined db=hg19 visibility=2 itemRgb=On" + '\r')
+    print("track name=user_defined description=user_defined db=hg38 visibility=2 itemRgb=On" + '\r')
     for entry in bed:
         print(entry + '\r')
            
